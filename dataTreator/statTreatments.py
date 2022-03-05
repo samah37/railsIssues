@@ -1,24 +1,21 @@
 import collections
 import csv
 from matplotlib import pyplot
-import pandas as pd
 from datetime import datetime
 from datetime import timedelta
 import numpy as np
 
 
 def rangeDate(startdate):
-    dateDebut = datetime.strptime(startdate, "%Y-%m-%dT%H:%M:%SZ")
-    return dateDebut + timedelta(90)
+    startingDate = datetime.strptime(startdate, "%Y-%m-%dT%H:%M:%SZ")
+    return startingDate + timedelta(90)
 
 
 def dateToString(date):
-    return date.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-
+    return date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def autolabel(rects):
-    
     for rect in rects:
         height = rect.get_height()
         axLabel.annotate('{}'.format(height),
@@ -45,55 +42,37 @@ rows = []
 label_set = set()
 users_list = []
 labels_general_list = []
-"""
-rows = ["nb_issue","id_issue","title", "id_user", "name_labels",
-            "nb_comments", "creation_time", "updated_time", "closed_time"]"""
 with open('../output_data.csv', newline='') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
     header = next(csvreader)
+    print(header)
     for row in csvreader:
         rows.append(row)
-
-
-"""
-Plot the occurency of the set of labels in the last 500 Issues
-
-"""
-"""
-"""
-
-StratingPeriodDate = rows[len(rows)-1][6]
+StratingPeriodDate = rows[len(rows) - 1][6]
 EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
-print(EndingPeriodDate)
-listoflists = []
-subList = []
-i = len(rows)-1
-counter=0
-globalnm=0
+i = len(rows) - 1
+globalnm = 0
 dictionnary = dict()
-test = 0
-while i>=0 or rows[i][6]<EndingPeriodDate :
-    list_label = rows[i][4].replace('[', '').replace(']', '').replace("'", '').replace(' ', '').split(',')
-    users_list.append(rows[i][3])
-    for label in list_label:
-        if label != '':
-            labels_general_list.append(label)
-    if rows[i][6]>=StratingPeriodDate and rows[i][6]<EndingPeriodDate:
-        counter+=1
-        globalnm+=1
+counter = 0
+while i >= 0:
+
+    if StratingPeriodDate <= rows[i][6] < EndingPeriodDate:
         i -= 1
+        counter += 1
+        globalnm += 1
+        list_label = rows[i][4].replace('[', '').replace(']', '').replace("'", '').replace(' ', '').split(',')
+        users_list.append(rows[i][3])
+        for label in list_label:
+            if label != '':
+                labels_general_list.append(label)
     else:
-        test += counter
-        print(counter)
-        counter =0
-        dictionnary[StratingPeriodDate+ "-"+ EndingPeriodDate]= counter
-        subList = []
-        StratingPeriodDate=rows[i][6]
-        print(StratingPeriodDate)
-        EndingPeriodDate= dateToString(rangeDate(StratingPeriodDate))
+        dictionnary[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter
+        counter = 0
+        StratingPeriodDate = EndingPeriodDate
+        EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
 
-
-print(test)
+dictionnary[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter
+print(globalnm)
 print(dictionnary.keys())
 occurences = collections.Counter(labels_general_list)
 label_set = set(labels_general_list)
@@ -123,5 +102,14 @@ axUsers.set_xticklabels(occurences_users, rotation=90, ha='right', fontsize=2)
 axUsers.legend()
 figUsers.tight_layout()
 pyplot.savefig('../dataPlot/NbissuesByUser.png')
+figTime, axTime = pyplot.subplots()
+TimePlot = axTime.plot([j for j in dictionnary.keys()], [dictionnary[i] for i in dictionnary.keys()], color='#3E7DCC')
+axTime.set_ylabel('Number of issues')
+axTime.set_xlabel('Time')
+axTime.set_title('Reporting issues cross time')
+axTime.set_xticks(np.arange(len(dictionnary)))
+axTime.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
+axTime.legend()
+figTime.tight_layout()
+pyplot.savefig('../dataPlot/NbIssuesPerTime.png')
 pyplot.show()
-
