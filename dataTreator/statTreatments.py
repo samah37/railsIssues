@@ -53,25 +53,49 @@ EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
 i = len(rows) - 1
 globalnm = 0
 dictionnary = dict()
+dict_update = dict()
+dict_closed = dict()
+dict_comment = dict()
+nb_comment = dict()
 counter = 0
+counter_update = 0
+counter_closed = 0
+k = len(rows) - 1
+h = len(rows) - 1
+nb_comment = 0
 while i >= 0:
 
     if StratingPeriodDate <= rows[i][6] < EndingPeriodDate:
         i -= 1
         counter += 1
         globalnm += 1
+        nb_comment += int(rows[i][5])
+        if rows[i][7] != '':
+            counter_update += 1
+        if rows[i][8] != '':
+            counter_closed += 1
         list_label = rows[i][4].replace('[', '').replace(']', '').replace("'", '').replace(' ', '').split(',')
         users_list.append(rows[i][3])
         for label in list_label:
             if label != '':
                 labels_general_list.append(label)
+
     else:
         dictionnary[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter
+        dict_update[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_update
+        dict_closed[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_closed
+        dict_comment[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = nb_comment
         counter = 0
+        counter_update=0
+        counter_closed=0
+        nb_comment=0
         StratingPeriodDate = EndingPeriodDate
         EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
 
 dictionnary[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter
+dict_update[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_update
+dict_closed[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_closed
+dict_comment[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = nb_comment
 print(globalnm)
 print(dictionnary.keys())
 occurences = collections.Counter(labels_general_list)
@@ -112,4 +136,18 @@ axTime.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
 axTime.legend()
 figTime.tight_layout()
 pyplot.savefig('../dataPlot/NbIssuesPerTime.png')
+
+figTimeSU, axTimeSU = pyplot.subplots()
+axTimeSU.plot([j for j in dictionnary.keys()], [dictionnary[i] for i in dictionnary.keys()], color='#3E7DCC', label= 'created issues')
+axTimeSU.plot([j for j in dict_update.keys()], [dictionnary[i] for i in dict_update.keys()], color='yellow', linestyle='-.', label="updated issues")
+axTimeSU.plot([j for j in dict_closed.keys()], [dict_closed[i] for i in dict_closed.keys()], color='red', label= "closed issues")
+axTimeSU.plot([j for j in dict_comment.keys()], [dict_comment[i] for i in dict_comment.keys()], color='green', label= "comment number")
+axTimeSU.set_ylabel('Number of issues')
+axTimeSU.set_xlabel('Time')
+axTimeSU.set_title('Reporting issues cross time')
+axTimeSU.set_xticks(np.arange(len(dictionnary)))
+axTimeSU.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
+axTimeSU.legend()
+figTimeSU.tight_layout()
+pyplot.savefig('../dataPlot/NbIssuesPerTimeSU.png')
 pyplot.show()
