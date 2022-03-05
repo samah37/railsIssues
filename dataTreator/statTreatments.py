@@ -1,19 +1,31 @@
 import collections
 import csv
-import numpy as np
 from matplotlib import pyplot
 import pandas as pd
+from datetime import datetime
+from datetime import timedelta
+import numpy as np
+
+
+def rangeDate(startdate):
+    dateDebut = datetime.strptime(startdate, "%Y-%m-%dT%H:%M:%SZ")
+    return dateDebut + timedelta(90)
+
+
+def dateToString(date):
+    return date.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
 
 
 def autolabel(rects):
-    """Attach a text label above each bar in *rects*, displaying its height."""
+    
     for rect in rects:
         height = rect.get_height()
-        ax.annotate('{}'.format(height),
-                    xy=(rect.get_x() + rect.get_width() / 2, height),
-                    xytext=(0, 1),  # 3 points vertical offset
-                    textcoords="offset points",
-                    ha='center', va='bottom')
+        axLabel.annotate('{}'.format(height),
+                         xy=(rect.get_x() + rect.get_width() / 2, height),
+                         xytext=(0, 1),  # 3 points vertical offset
+                         textcoords="offset points",
+                         ha='center', va='bottom')
 
 
 def gradientbars(bars):
@@ -29,9 +41,6 @@ def gradientbars(bars):
     ax.axis(lim)
 
 
-#def BarPlot(X, Y):
-
-
 rows = []
 label_set = set()
 users_list = []
@@ -44,41 +53,75 @@ with open('../output_data.csv', newline='') as csvfile:
     header = next(csvreader)
     for row in csvreader:
         rows.append(row)
-    for row in rows:
-        list_label = row[4].replace('[', '').replace(']', '').replace("'", '').replace(' ', '').split(',')
-        users_list.append(row[3])
-        for label in list_label:
-            if label != '':
-                labels_general_list.append(label)
+
+
+"""
+Plot the occurency of the set of labels in the last 500 Issues
+
+"""
+"""
+"""
+
+StratingPeriodDate = rows[len(rows)-1][6]
+EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
+print(EndingPeriodDate)
+listoflists = []
+subList = []
+i = len(rows)-1
+counter=0
+globalnm=0
+dictionnary = dict()
+test = 0
+while i>=0 or rows[i][6]<EndingPeriodDate :
+    list_label = rows[i][4].replace('[', '').replace(']', '').replace("'", '').replace(' ', '').split(',')
+    users_list.append(rows[i][3])
+    for label in list_label:
+        if label != '':
+            labels_general_list.append(label)
+    if rows[i][6]>=StratingPeriodDate and rows[i][6]<EndingPeriodDate:
+        counter+=1
+        globalnm+=1
+        i -= 1
+    else:
+        test += counter
+        print(counter)
+        counter =0
+        dictionnary[StratingPeriodDate+ "-"+ EndingPeriodDate]= counter
+        subList = []
+        StratingPeriodDate=rows[i][6]
+        print(StratingPeriodDate)
+        EndingPeriodDate= dateToString(rangeDate(StratingPeriodDate))
+
+
+print(test)
+print(dictionnary.keys())
 occurences = collections.Counter(labels_general_list)
 label_set = set(labels_general_list)
-print(len(label_set))
-print(len(labels_general_list))
 occurences_users = collections.Counter(users_list)
-print(len(occurences_users))
 set_user = set(users_list)
-# pyplot.figure(figsize=(50, 10))
-# pyplot.rc('xtick', labelsize=6)
 x = np.arange(len(occurences))  # the label locations
-width = 0.35  # the width of the bars
-fig, ax = pyplot.subplots()
-fig1, ax1 = pyplot.subplots()
+width = 0.35
+figLabel, axLabel = pyplot.subplots()
 c = ['red', 'yellow', 'black', 'blue', 'orange']
-rects1 = ax.bar([j for j in label_set], [occurences[i] for i in (label_set)], color=c)
-rects2 = ax1.plot([j for j in set_user], [occurences_users[i] for i in (set_user)], color='#3E7DCC')
-ax.set_ylabel('Occurences')
-ax.set_title('Occurences by Labels')
-ax.set_xticks(x)
-ax.set_xticklabels(list(label_set), rotation=45, ha='right', fontsize=6)
-ax.legend()
-autolabel(rects1)
-gradientbars(rects1)
-fig.tight_layout()
-ax1.set_ylabel('Occurences')
-ax1.set_title('Occurences by Labels')
-ax1.set_xticks(np.arange(len(occurences_users)))
-ax1.set_xticklabels(occurences_users, rotation=90, ha='right', fontsize=3)
-ax1.legend()
-fig1.tight_layout()
+LabelBar = axLabel.bar([j for j in label_set], [occurences[i] for i in (label_set)], color=c)
+axLabel.set_ylabel('Occurences')
+axLabel.set_title('Occurences by Labels')
+axLabel.set_xticks(x)
+axLabel.set_xticklabels(list(label_set), rotation=45, ha='right', fontsize=8)
+axLabel.legend()
+autolabel(LabelBar)
+gradientbars(LabelBar)
+figLabel.tight_layout()
 pyplot.savefig('../dataPlot/OccurencesByLabels.png')
+figUsers, axUsers = pyplot.subplots()
+UserPlot = axUsers.plot([j for j in set_user], [occurences_users[i] for i in (set_user)], color='#3E7DCC')
+axUsers.set_ylabel('Number of issues')
+axUsers.set_xlabel('User ID')
+axUsers.set_title('Reporting issues By users')
+axUsers.set_xticks(np.arange(len(occurences_users)))
+axUsers.set_xticklabels(occurences_users, rotation=90, ha='right', fontsize=2)
+axUsers.legend()
+figUsers.tight_layout()
+pyplot.savefig('../dataPlot/NbissuesByUser.png')
 pyplot.show()
+
