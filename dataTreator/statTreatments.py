@@ -114,7 +114,7 @@ for i in (set_user):
         id_user = i
     if occurences_users[i]== 1:
         nb_one+=1
-nb_one= float(nb_one/500)
+nb_one= float(nb_one/len(set_user))
 print(id_user)
 print(max)
 print(nb_one)
