@@ -100,13 +100,24 @@ dict_closed[StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[
                                             0:7]] = counter_closed
 dict_comment[
     StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[0][6], "%Y-%m-%dT%H:%M:%SZ"))[0:7]] = nb_comment
-print(globalnm)
-print(dictionnary.keys())
 occurences = collections.Counter(labels_general_list)
 label_set = set(labels_general_list)
 occurences_users = collections.Counter(users_list)
 set_user = set(users_list)
-x = np.arange(len(occurences))  # the label locations
+x = np.arange(len(occurences))
+id_user =0
+max = 0
+nb_one = 0
+for i in (set_user):
+    if occurences_users[i]>max:
+        max = occurences_users[i]
+        id_user = i
+    if occurences_users[i]== 1:
+        nb_one+=1
+nb_one= float(nb_one/500)
+print(id_user)
+print(max)
+print(nb_one)
 width = 0.35
 figLabel, axLabel = pyplot.subplots()
 c = ['red', 'yellow', 'black', 'blue', 'orange']
@@ -121,7 +132,7 @@ gradientbars(LabelBar)
 figLabel.tight_layout()
 pyplot.savefig('../dataPlot/OccurencesByLabels.png')
 figUsers, axUsers = pyplot.subplots()
-UserPlot = axUsers.plot([j for j in set_user], [occurences_users[i] for i in (set_user)], color='#3E7DCC')
+UserPlot = axUsers.plot([j for j in set_user], [occurences_users[i] for i in (set_user)], color='#3E7DCC', label = 'The user "'+ str(id_user)+'" have reported '+str(max)+ ' issues \n % users with only one issue :'+str(nb_one))
 axUsers.set_ylabel('Number of issues')
 axUsers.set_xlabel('User ID')
 axUsers.set_title('Reporting issues By users')
