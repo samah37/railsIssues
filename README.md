@@ -5,7 +5,7 @@ This project collect the last N (500 actually) from rails project and analyse th
 ## I. Data collection module (dataCollector)
 
 This module is to collect data which is the issues related to the [rails](https://github.com/rails/rails/issues) project we have used the GitHub REST API.
-The module have been separated because of the lower limit range access of the API.
+The module have been separated because of the lower [rate limit](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting) access of the API.
 
 ### Installation
 
