@@ -1,5 +1,5 @@
-#railsIssues
-##I. Data collection module (dataCollector)
+# railsIssues
+## I. Data collection module (dataCollector)
 
 This module is to collect data which is the issues related to the [rails](https://github.com/rails/rails/issues) project we have used the GitHub REST API.
 The module have been separated because of the lower limit range access of the API.
