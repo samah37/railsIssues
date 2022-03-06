@@ -1,5 +1,5 @@
-#railsIssues
-##I. Data collection module (dataCollector)
+# railsIssues
+## I. Data collection module (dataCollector)
 
 This module is to collect data which is the issues related to the [rails](https://github.com/rails/rails/issues) project we have used the GitHub REST API.
 The module have been separated because of the lower limit range access of the API.
@@ -17,7 +17,7 @@ pip install requests
 ```bash
 pip install csv
 ```
-## Usage
+### Usage
 
 ```python
 from github import Github
@@ -46,8 +46,23 @@ with open('CsvFILE', 'w', newline='') as output:
         user_data = requests.get(url).json()
         ...
     #write rows one by one in the csv file
+    write.writerow(...)
 
 ```
+The results of this module will be a CSV File which contains only the wanted rows.
+The file is output_data.csv in the project root.
+Below a file sample:
+
+|id_issue  |nb_issue|title                                                                                 |id_user |name_labels                         |nb_comments|creation_time       |updated_time        |closed_time|
+|----------|--------|--------------------------------------------------------------------------------------|--------|------------------------------------|-----------|--------------------|--------------------|-----------|
+|1160222691|44619   |Upgrading Rails from 6.0 --> 6.1 breaks this query                                    |46462767|[]                                  |0          |2022-03-05T04:09:01Z|2022-03-05T04:11:16Z|           |
+|1160014635|44617   |Add `active_record.destroy_association_async_batch_size` configuration                |7942714 |['activerecord', 'railties', 'docs']|0          |2022-03-04T20:13:41Z|2022-03-04T22:08:27Z|           |
+|1159903813|44616   |Always preload if using proc with multifetch cache                                    |509837  |['actionview']                      |0          |2022-03-04T17:55:29Z|2022-03-04T17:56:38Z|           |
+|1159838401|44614   |Add :renderable to the list of rendering keys supported by ActionView::Renderer#render|922012  |['actionview']                      |0          |2022-03-04T16:42:49Z|2022-03-04T16:42:52Z|           |
+|1159832478|44613   |Fix eager loading of ActionDispatch::Routing                                          |19192189|['actionpack']                      |0          |2022-03-04T16:35:59Z|2022-03-04T16:41:46Z|           |
+
+
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
