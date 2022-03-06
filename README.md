@@ -132,9 +132,13 @@ The graphs obtained when running this module are saved in dataPlot folder.
 ![Alt text](dataPlot/NbissuesByUser.png?raw=true "Plot")
 
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## III. Web page
+In order to analyse the obtained result a simple [WebPage](https://samah37.github.io/railsIssues/) has been created.
 
-Please make sure to update tests as appropriate.
+The Html code is in index file.
+
+The res file contains css and fonts.
+
+#### Developper: [Samah KANSAB](https://github.com/samah37)
 
 
