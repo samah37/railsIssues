@@ -4,7 +4,6 @@ import csv
 NB_ISSUES= 500
 USER= "rails"
 REPO= "rails"
-# Github username
 nb_page =1
 i = 0
 with open('output_data.csv', 'w', newline='') as output:
@@ -15,9 +14,7 @@ with open('output_data.csv', 'w', newline='') as output:
     counter = 0
     while i < NB_ISSUES:
         url = f"https://api.github.com/repos/"+USER+"/"+REPO+"/issues?page=" + str(nb_page)
-        # pygithub object
         g = Github()
-        # get that user by username
         user_data = requests.get(url).json()
         i += len(user_data)
         nb_page += 1
