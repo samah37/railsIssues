@@ -1,4 +1,7 @@
-# railsIssues
+# Project : railsIssues
+
+-----
+This project collect the last N (500 actually) from rails project and analyse the obtained results
 ## I. Data collection module (dataCollector)
 
 This module is to collect data which is the issues related to the [rails](https://github.com/rails/rails/issues) project we have used the GitHub REST API.
@@ -128,17 +131,21 @@ while i >= 0:
 pyplot.show()
 
 ```
+## III. Data plots (dataPlot)
 The graphs obtained when running this module are saved in dataPlot folder.
+
 ![Alt text](dataPlot/NbissuesByUser.png?raw=true "Plot")
 
 
-## III. Web page
+## VI. Web page
 In order to analyse the obtained result a simple [WebPage](https://samah37.github.io/railsIssues/) has been created.
 
 The Html code is in index file.
 
-The res file contains css and fonts.
+The res file contains css and fonts.\
 
+-----
+-----
 #### Developper: [Samah KANSAB](https://github.com/samah37)
 
 
