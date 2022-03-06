@@ -161,9 +161,9 @@ axTimeSU.plot([j for j in dict_closed.keys()], [dict_closed[i] for i in dict_clo
               label="closed issues")
 axTimeSU.plot([j for j in dict_comment.keys()], [dict_comment[i] for i in dict_comment.keys()], color='green',
               label="comment number")
-axTimeSU.set_ylabel('Number of issues')
+axTimeSU.set_ylabel('Number of issues/comments')
 axTimeSU.set_xlabel('Time')
-axTimeSU.set_title('Reporting issues across time')
+axTimeSU.set_title('Reporting issues and comments across time')
 axTimeSU.set_xticks(np.arange(len(dictionnary)))
 axTimeSU.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
 axTimeSU.legend()
