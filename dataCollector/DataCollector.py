@@ -1,8 +1,5 @@
-import base64
 from github import Github
-from pprint import pprint
 import requests
-import json
 import csv
 NB_ISSUES= 500
 USER= "rails"

@@ -86,16 +86,20 @@ while i >= 0:
         dict_closed[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_closed
         dict_comment[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = nb_comment
         counter = 0
-        counter_update=0
-        counter_closed=0
-        nb_comment=0
+        counter_update = 0
+        counter_closed = 0
+        nb_comment = 0
         StratingPeriodDate = EndingPeriodDate
         EndingPeriodDate = dateToString(rangeDate(StratingPeriodDate))
 
-dictionnary[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter
-dict_update[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_update
-dict_closed[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = counter_closed
-dict_comment[StratingPeriodDate[0:7] + "-" + EndingPeriodDate[0:7]] = nb_comment
+dictionnary[
+    StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[0][6], "%Y-%m-%dT%H:%M:%SZ"))[0:7]] = counter
+dict_update[StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[0][6], "%Y-%m-%dT%H:%M:%SZ"))[
+                                            0:7]] = counter_update
+dict_closed[StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[0][6], "%Y-%m-%dT%H:%M:%SZ"))[
+                                            0:7]] = counter_closed
+dict_comment[
+    StratingPeriodDate[0:7] + "-" + dateToString(datetime.strptime(rows[0][6], "%Y-%m-%dT%H:%M:%SZ"))[0:7]] = nb_comment
 print(globalnm)
 print(dictionnary.keys())
 occurences = collections.Counter(labels_general_list)
@@ -130,7 +134,7 @@ figTime, axTime = pyplot.subplots()
 TimePlot = axTime.plot([j for j in dictionnary.keys()], [dictionnary[i] for i in dictionnary.keys()], color='#3E7DCC')
 axTime.set_ylabel('Number of issues')
 axTime.set_xlabel('Time')
-axTime.set_title('Reporting issues cross time')
+axTime.set_title('Reporting issues across time')
 axTime.set_xticks(np.arange(len(dictionnary)))
 axTime.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
 axTime.legend()
@@ -138,13 +142,17 @@ figTime.tight_layout()
 pyplot.savefig('../dataPlot/NbIssuesPerTime.png')
 
 figTimeSU, axTimeSU = pyplot.subplots()
-axTimeSU.plot([j for j in dictionnary.keys()], [dictionnary[i] for i in dictionnary.keys()], color='#3E7DCC', label= 'created issues')
-axTimeSU.plot([j for j in dict_update.keys()], [dictionnary[i] for i in dict_update.keys()], color='yellow', linestyle='-.', label="updated issues")
-axTimeSU.plot([j for j in dict_closed.keys()], [dict_closed[i] for i in dict_closed.keys()], color='red', label= "closed issues")
-axTimeSU.plot([j for j in dict_comment.keys()], [dict_comment[i] for i in dict_comment.keys()], color='green', label= "comment number")
+axTimeSU.plot([j for j in dictionnary.keys()], [dictionnary[i] for i in dictionnary.keys()], color='#3E7DCC',
+              label='created issues')
+axTimeSU.plot([j for j in dict_update.keys()], [dictionnary[i] for i in dict_update.keys()], color='yellow',
+              linestyle='-.', label="updated issues")
+axTimeSU.plot([j for j in dict_closed.keys()], [dict_closed[i] for i in dict_closed.keys()], color='red',
+              label="closed issues")
+axTimeSU.plot([j for j in dict_comment.keys()], [dict_comment[i] for i in dict_comment.keys()], color='green',
+              label="comment number")
 axTimeSU.set_ylabel('Number of issues')
 axTimeSU.set_xlabel('Time')
-axTimeSU.set_title('Reporting issues cross time')
+axTimeSU.set_title('Reporting issues across time')
 axTimeSU.set_xticks(np.arange(len(dictionnary)))
 axTimeSU.set_xticklabels(dictionnary.keys(), rotation=90, ha='right', fontsize=8)
 axTimeSU.legend()
